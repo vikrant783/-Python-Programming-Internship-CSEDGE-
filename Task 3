@@ -1,0 +1,25 @@
+`
+import PyPDF2
+
+def merge_pdfs(file_list, output_file):
+    pdf_writer = PyPDF2.PdfFileWriter()
+    for file in file_list:
+        pdf_reader = PyPDF2.PdfFileReader(file)
+        for page in range(pdf_reader.numPages):
+            pdf_writer.addPage(pdf_reader.getPage(page))
+    with open(output_file, 'wb') as output_pdf:
+        pdf_writer.write(output_pdf)
+
+def split_pdf(input_file, output_prefix):
+    pdf_reader = PyPDF2.PdfFileReader(input_file)
+    for page in range(pdf_reader.numPages):
+        pdf_writer = PyPDF2.PdfFileWriter()
+        pdf_writer.addPage(pdf_reader.getPage(page))
+        with open(f'{output_prefix}_{page+1}.pdf', 'wb') as output_pdf:
+            pdf_writer.write(output_pdf)
+
+file_list = ['file1.pdf', 'file2.pdf', 'file3.pdf']
+merge_pdfs(file_list, 'merged_file.pdf')
+
+input_file = 'input_file.pdf'
+split_pdf(input_file, 'split_file')
